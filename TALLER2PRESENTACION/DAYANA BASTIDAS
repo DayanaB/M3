@@ -1,0 +1,65 @@
+title: "PRESENTACION"
+author: "Dayana Bastidas"
+date: "14 de abril de 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## PRESENTACION MODULO 3
+
+**PRESTAMOS**
+La empresa desea automatizar el proceso de elegibilidad del préstamo (en tiempo real) en función del detalle del cliente que se le proporcionó al completar el formulario de solicitud en línea. Estos detalles son Género, Estado civil, Educación, Número de dependientes, Ingresos, Monto del préstamo, Historial de crédito y otros. Para automatizar este proceso, han dado un problema para identificar los segmentos de clientes, que son elegibles para el monto del préstamo para que puedan dirigirse específicamente a estos clientes. Aquí han proporcionado un conjunto de datos parciales.
+
+
+## Resumen de los Datos
+
+
+```{r}
+setwd("C:/Users/toshiba/Documents/DocumentosR")
+data <-read.csv("train.csv",na.strings = c(""," ",NA))
+str(data)
+#View(data)
+#save(data,file = "DataTrain.RData")
+train <-read.csv("train.csv",na.strings = c(""," ",NA)) #Datos de entrenamiento 
+#install.packages("mlr")
+library(mlr)
+summary(train)
+summarizeColumns(train)
+sd(train$ApplicantIncome,na.rm=T)
+sd(train$LoanAmount,na.rm=T)
+```
+
+## Graficos
+
+```{r pressure}
+#Factor genero
+par(mfrow=c(1,2))
+prop.table(table(train$Gender))
+library(ggplot2)
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Gender)+ggtitle("Estado del préstamo por género del solicitante"))
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Married)+ggtitle("Estado del préstamo por estado civil del solicitante"))
+#Una mayor proporción de solicitantes no casados son rechazados que los casados
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Dependents)+ggtitle("Estado del préstamo por número de dependientes del solicitante"))
+#Se rechaza una proporción menor de solicitantes con dos personas a cargo que otros números
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Education)+ggtitle("Estado del préstamo por educación del solicitante"))
+#Una mayor proporción de no graduados es rechazada que los graduados
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Self_Employed)+ggtitle("Estado del préstamo por estado laboral del solicitante"))
+#No empleado por sí mismo parece ser ligeramente preferido
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Loan_Amount_Term)+ggtitle("Estado del préstamo por condiciones de préstamo"))
+#Es difícil ver patrones, la mayoría de los préstamos son por 360 meses
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Credit_History)+ggtitle("Estado del préstamo por historial crediticio del solicitante"))
+#Esto se ve muy importante! Casi todos los solicitantes con historial = 0 son rechazados
+print(ggplot(train, aes(x=Loan_Status))+geom_bar()+facet_grid(.~Property_Area)+ggtitle("Estado del préstamo por área de propiedad"))
+#Es más fácil obtener un préstamo si la propiedad es semi urbana y más difícil si es rural
+print(ggplot(train, aes(x=Loan_Status,y=ApplicantIncome))+geom_boxplot()+ggtitle("Estado del préstamo por ingreso del solicitante"))
+#No parece que haya mucha diferencia
+print(ggplot(train, aes(x=Loan_Status,y=CoapplicantIncome))+geom_boxplot()+ggtitle("Estado del préstamo por ingreso del co solicitante"))
+#Parece hacer una diferencia
+print(ggplot(train, aes(x=Loan_Status,y=LoanAmount))+geom_boxplot()+ggtitle("Estado del préstamo por monto del préstamo"))
+#El tercer cuartil de los préstamos rechazados es mayor
+
+```
+
